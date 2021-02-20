@@ -1,5 +1,5 @@
 from django.db import models
-from .consts import RACES, GRADES, MOPS, DOCTOR 
+from consts.NamesConsts import RACES, GRADES, MOPS, DOCTOR 
  
 
 # Create your models here
@@ -9,11 +9,19 @@ class Animal(models.Model):
     CreationDate = models.DateField()
     Gender = models.BooleanField()
     Race = models.CharField(max_length=100, choices=RACES)
+    
+    def __str__(self):
+
+        return self.Name
 
 class Doctor(models.Model):
     Name = models.TextField()
     Grade = models.CharField(max_length=100, choices = GRADES)
     
+    def __str__(self):
+
+        return self.Name
+
 class Order(models.Model):
     Reason = models.TextField()
     Date = models.DateTimeField(auto_now=True)

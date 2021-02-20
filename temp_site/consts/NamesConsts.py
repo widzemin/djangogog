@@ -1,15 +1,16 @@
 MOPS = 'MP'
 PEKINES = 'PK'
 SHPIC = 'SH'
+DOCTOR = 'DR'
+SDOCTOR = 'SDR'
+MDOCTOR = 'MDR'
+
 RACES = [
    (MOPS, 'Mops'),
    (PEKINES, 'Pekines'),
    (SHPIC, 'Shpic'),
 ]
 
-DOCTOR = 'DR'
-SDOCTOR = 'SDR'
-MDOCTOR = 'MDR'
 GRADES = [
    (DOCTOR, 'Doctor'),
    (SDOCTOR, 'Super-doctor'),
