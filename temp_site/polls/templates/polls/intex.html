@@ -1,9 +1,0 @@
-{% if orders  %}
-    <ul>
-    {% for q in orders %}
-    <li> {{ q.Animal.Name }}, {{ q.Doctor.Name }}, {{ q.Date }}, {{ q.Reason }}</li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No polls are available.</p>
-{% endif %}
