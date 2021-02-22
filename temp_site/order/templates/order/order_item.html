@@ -1,0 +1,8 @@
+{% if order %}
+	Animal name - {{ order.animal.name }} <br>
+	Doctor name - {{ order.doctor.name }} <br>
+	Date - {{ order.date }} <br>
+	Reason - {{ order.reason }}
+{% else  %}
+	<p> No order with this id </p>
+{% endif  %}
