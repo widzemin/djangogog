@@ -1,9 +1,7 @@
-from django.urls import path
-
-import views
+from django.urls import path, include
+from order import views
 
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('index/', views.index, name='index'),
-    path('order_id/', views.order_id, name='order'),
-]
+       path('<int:order_id>', views.order_list, name='order_list'),
+       path('', views.index, name='index'),
+] 

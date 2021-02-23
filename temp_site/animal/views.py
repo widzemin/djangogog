@@ -8,7 +8,7 @@ def animal_list(request, animal_id):
         animal = Animal.objects.get(pk=animal_id)
     except Animal.DoesNotExist:
         raise Http404('Animal doest not exist')
-    template = loader.get_template('order/animal_item.html')
+    template = loader.get_template('animal/animal_item.html')
     context = {
         'animal': animal 
     }
