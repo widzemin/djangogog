@@ -8,7 +8,7 @@ def doctor_list(request, doctor_id):
         doctor = Doctor.objects.get(pk=doctor_id)
     except Doctor.DoesNotExist:
         raise Http404('Doctor doest not exist')
-    template = loader.get_template('doctor/doctor_item.html')
+    template = loader.get_template('order/doctor_item.html')
     context = {
         'doctor': doctor
     }
