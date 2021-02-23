@@ -1,8 +1,13 @@
 {% if orders  %}
     <ul>
     {% for order in orders %}
-    <li> (<a href="/order/{{ order.id }}">{{ order.id  }}</a>)
-	    {{ order.animal.name }},<a href="/doctor/{{ order.doctor.id }}">{{ order.doctor.name }}</a>, {{ order.date }}, {{ order.reason }}</li>
+    	<li> 
+		(<a href="/order/{{ order.id }}">{{ order.id  }}</a>)
+	 	<a href="/animal/{{ order.animal.id }}">{{ order.animal.name }}</a>,
+	 	<a href="/doctor/{{ order.doctor.id }}">{{ order.doctor.name }}</a>, 
+	 	{{ order.date }}, 
+	 	{{ order.reason }}
+    	</li>
     {% endfor %}
     </ul>
 {% else %}

@@ -1,0 +1,19 @@
+{% if animal %}
+	<p>
+                Animal name - {{ animal.name }} <br>
+                Animal relation date - {{ animal.relation_date }} <br>
+		Animal gender - 
+		{% if animal.gender %}
+			dog
+		{% else %}
+			bitch
+		{% endif %} <br>
+		Animal race - {{ animal.race }} <br>
+        </p>
+{% else  %}
+        <p> 
+                No animal with this id  
+        </p>
+{% endif  %}
+
+
