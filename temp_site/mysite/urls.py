@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from order.views import index, order_list
+from order.views import index, order_list, add_order, dog_orders, bitch_orders
 from doctor.views import doctor_list
 from animal.views import animal_list
 import order.urls
@@ -25,4 +25,7 @@ urlpatterns = [
     path('order/', include('order.urls')),
     path('doctor/<int:doctor_id>', doctor_list),
     path('animal/<int:animal_id>', animal_list),
+    path('order/add/', add_order),
+    path('order/dog/', dog_orders),
+    path('order/bitch/', bitch_orders),
 ]

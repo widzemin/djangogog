@@ -4,7 +4,7 @@ from doctor.models import Doctor
 
 class Order(models.Model):
     reason = models.TextField()
-    date = models.DateTimeField(auto_now=True)
+    date = models.DateTimeField(auto_now=False)
     doctor = models.ForeignKey(
             Doctor,
             on_delete=models.CASCADE,
