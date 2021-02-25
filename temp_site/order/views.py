@@ -39,11 +39,10 @@ def add_order(request):
 
 def dog_orders(request):
     try:
-        all_orders = Order.objects.all()
+        orders = Order.objects.filter(animal__gender=True)
     except Order.DoesNotExist:
         raise Http404('Order does not exist')
     template = loader.get_template('order/index.html')
-    orders = [order for order in all_orders if order.animal.gender] 
     context = {
         'orders': orders,
     }
@@ -51,7 +50,7 @@ def dog_orders(request):
 
 def bitch_orders(request):
     try:
-        all_orders = Order.objects.all()
+        orders = Order.objects.filter(animal__gender=False)
     except Order.DoesNotExist:
         raise Http404('Order does not exist')
     template = loader.get_template('order/index.html')
