@@ -54,8 +54,20 @@ def bitch_orders(request):
     except Order.DoesNotExist:
         raise Http404('Order does not exist')
     template = loader.get_template('order/index.html')
-    orders = [order for order in all_orders if not order.animal.gender]
     context = {
         'orders': orders,
     }
     return HttpResponse(template.render(context, request))
+
+def sorted_orders(request):
+    try:
+        orders = Order.objects.order_by('-date')
+    except Order.DoesNotExist:
+        raise Http404('Order does not exist')
+    template = loader.get_template('order/index.html')
+    context = {
+        'orders': orders,
+    }
+    return HttpResponse(template.render(context, request))
+
+
