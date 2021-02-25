@@ -3,13 +3,15 @@ from animal.models import Animal
 from doctor.models import Doctor
 from order.models import Order
 import datetime
-from consts.NamesConsts import MOPS, PEKINES, SHPIC 
+from consts.NamesConsts import MOPS, PEKINES, SHPIC
 from consts.NamesConsts import DOCTOR, SDOCTOR, MDOCTOR
+
 
 @pytest.mark.django_db
 def test_with_client(client):
     response = client.get('/order/dog/')
     assert response.status_code == 200
+
 
 @pytest.mark.django_db
 def test_order_past_valid():
@@ -19,22 +21,23 @@ def test_order_past_valid():
         seconds=10
     )
     temp_animal = Animal(
-        name='temp_animal_name', 
-        relation_date=date_past, 
-        gender=True, 
+        name='temp_animal_name',
+        relation_date=date_past,
+        gender=True,
         race=MOPS
     )
     temp_doctor = Doctor(
-        name='temp_doctor_name', 
+        name='temp_doctor_name',
         grade=DOCTOR
     )
     order_past = Order(
-        reason='temp_reason', 
-        date=date_past, 
-        doctor=temp_doctor, 
+        reason='temp_reason',
+        date=date_past,
+        doctor=temp_doctor,
         animal=temp_animal
     )
-    assert order_past.is_active() == False
+    assert order_past.is_active() is False
+
 
 @pytest.mark.django_db
 def test_order_future_valid():
@@ -44,22 +47,23 @@ def test_order_future_valid():
         seconds=10
     )
     temp_animal = Animal(
-        name='temp_animal_name', 
-        relation_date=date_future, 
-        gender=True, 
+        name='temp_animal_name',
+        relation_date=date_future,
+        gender=True,
         race=MOPS
     )
     temp_doctor = Doctor(
-        name='temp_doctor_name', 
+        name='temp_doctor_name',
         grade=DOCTOR
     )
     order_future = Order(
-        reason='temp_reason', 
-        date=date_future, 
-        doctor=temp_doctor, 
+        reason='temp_reason',
+        date=date_future,
+        doctor=temp_doctor,
         animal=temp_animal
     )
     assert order_future.is_active() == True
+
 
 @pytest.mark.django_db
 def test_order_now_valid():
@@ -67,22 +71,55 @@ def test_order_now_valid():
         seconds=1
     )
     temp_animal = Animal(
-        name='temp_animal_name', 
-        relation_date=date_now, 
-        gender=True, 
+        name='temp_animal_name',
+        relation_date=date_now,
+        gender=True,
         race=MOPS
     )
     temp_doctor = Doctor(
-        name='temp_doctor_name', 
+        name='temp_doctor_name',
         grade=DOCTOR
     )
     order_now = Order(
-        reason='temp_reason', 
-        date=date_now, 
-        doctor=temp_doctor, 
+        reason='temp_reason',
+        date=date_now,
+        doctor=temp_doctor,
         animal=temp_animal
     )
-    assert order_now.is_active() == True 
+    assert order_now.is_active() is True
 
 
-
+@pytest.mark.django_db
+def test_order_api(admin_client):
+    data = {
+        'reason': 'temp_reason',
+        'date': datetime.datetime.now(),
+        'doctor': None,
+        'animal': None
+    }
+    response = admin_client.post('/api/order/setview/', data=data,
+                                 content_type='application/json')
+    assert response.status_code == 400
+    assert str(response.data['doctor'][0]) == 'This field may not be null.'
+    assert str(response.data['animal'][0]) == 'This field may not be null.'
+    temp_animal = Animal.objects.create(
+        name='temp_animal_name',
+        relation_date=datetime.datetime.now(),
+        gender=True,
+        race=MOPS
+    )
+    temp_doctor = Doctor.objects.create(
+        name='temp_doctor_name',
+        grade=DOCTOR
+    )
+    data = {
+        'reason': 'temp_reason',
+        'date': datetime.datetime.now(),
+        'doctor': temp_doctor.id,
+        'animal': temp_animal.id
+    }
+    response = admin_client.post('/api/order/setview/', data=data,
+                                 content_type='application/json')
+    assert response.status_code == 201, response.data
+    assert response.data['doctor'] == temp_doctor.id
+    assert response.data['animal'] == temp_animal.id

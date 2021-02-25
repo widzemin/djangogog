@@ -1,9 +1,13 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from order.models import Order
 from django.template import loader
 from django.forms import modelform_factory
-from order.forms import OrderForm 
+from order.forms import OrderForm
+from rest_framework import viewsets
+from rest_framework import permissions
+from order.serializers import OrderSerializer
+
 
 def index(request):
     try:
@@ -16,6 +20,7 @@ def index(request):
     }        
     return HttpResponse(template.render(context, request)) 
 
+
 def order_list(request, order_id):
     try:
         order = Order.objects.get(pk=order_id)
@@ -27,6 +32,7 @@ def order_list(request, order_id):
     }
     return HttpResponse(template.render(context, request))
 
+
 def add_order(request):
     order_formset = modelform_factory(Order, form=OrderForm)
     if request.method == 'POST':
@@ -36,6 +42,7 @@ def add_order(request):
     else:
         formset = order_formset()
     return render(request, 'order/order_form.html', {'formset': formset})
+
 
 def dog_orders(request):
     try:
@@ -48,6 +55,7 @@ def dog_orders(request):
     }
     return HttpResponse(template.render(context, request))
 
+
 def bitch_orders(request):
     try:
         orders = Order.objects.filter(animal__gender=False)
@@ -59,6 +67,7 @@ def bitch_orders(request):
     }
     return HttpResponse(template.render(context, request))
 
+
 def sorted_orders(request):
     try:
         orders = Order.objects.order_by('-date')
@@ -69,5 +78,13 @@ def sorted_orders(request):
         'orders': orders,
     }
     return HttpResponse(template.render(context, request))
+
+
+class OrderViewSet(viewsets.ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
 
 
