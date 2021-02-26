@@ -62,7 +62,7 @@ def test_order_future_valid():
         doctor=temp_doctor,
         animal=temp_animal
     )
-    assert order_future.is_active() == True
+    assert order_future.is_active() is True
 
 
 @pytest.mark.django_db
@@ -90,18 +90,25 @@ def test_order_now_valid():
 
 
 @pytest.mark.django_db
-def test_order_api(admin_client):
+def test_order_api_none_keys(admin_client):
     data = {
         'reason': 'temp_reason',
         'date': datetime.datetime.now(),
         'doctor': None,
         'animal': None
     }
-    response = admin_client.post('/api/order/setview/', data=data,
-                                 content_type='application/json')
+    response = admin_client.post(
+        '/api/order/setview/',
+        data=data,
+        content_type='application/json'
+    )
     assert response.status_code == 400
     assert str(response.data['doctor'][0]) == 'This field may not be null.'
     assert str(response.data['animal'][0]) == 'This field may not be null.'
+
+
+@pytest.mark.django_db
+def test_order_api_valid_keys(admin_client):
     temp_animal = Animal.objects.create(
         name='temp_animal_name',
         relation_date=datetime.datetime.now(),
@@ -118,8 +125,11 @@ def test_order_api(admin_client):
         'doctor': temp_doctor.id,
         'animal': temp_animal.id
     }
-    response = admin_client.post('/api/order/setview/', data=data,
-                                 content_type='application/json')
+    response = admin_client.post(
+        '/api/order/setview/',
+        data=data,
+        content_type='application/json'
+    )
     assert response.status_code == 201, response.data
     assert response.data['doctor'] == temp_doctor.id
     assert response.data['animal'] == temp_animal.id

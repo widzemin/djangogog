@@ -24,13 +24,15 @@ from order.views import (
         sorted_orders,
         OrderViewSet
 )
-from doctor.views import doctor_list
-from animal.views import animal_list
+from doctor.views import doctor_list, DoctorViewSet
+from animal.views import animal_list, AnimalViewSet
 import order.urls
 from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register('order/setview', OrderViewSet)
+router.register('doctor/setview', DoctorViewSet)
+router.register('animal/setview', AnimalViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

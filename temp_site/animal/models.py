@@ -1,6 +1,7 @@
 from django.db import models
 from consts.NamesConsts import RACES
 
+
 class Animal(models.Model):
     name = models.CharField(max_length=100)
     relation_date = models.DateField()

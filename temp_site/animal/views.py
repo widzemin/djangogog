@@ -1,7 +1,11 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from animal.models import Animal 
 from django.template import loader
+from rest_framework import viewsets
+from rest_framework import permissions
+from animal.serializers import AnimalSerializer
+
 
 def animal_list(request, animal_id):
     try:
@@ -13,3 +17,9 @@ def animal_list(request, animal_id):
         'animal': animal 
     }
     return HttpResponse(template.render(context, request))
+
+
+class AnimalViewSet(viewsets.ModelViewSet):
+    queryset = Animal.objects.all()
+    serializer_class = AnimalSerializer
+    permission_classes = [permissions.IsAuthenticated]
