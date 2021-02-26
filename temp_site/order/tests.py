@@ -8,8 +8,20 @@ from consts.NamesConsts import DOCTOR, SDOCTOR, MDOCTOR
 
 
 @pytest.mark.django_db
-def test_with_client(client):
+def test_with_client_1(client):
     response = client.get('/order/dog/')
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_with_client_2(client):
+    response = client.get('/order/bitch/')
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_with_client_3(client):
+    response = client.get('/order/sort/')
     assert response.status_code == 200
 
 

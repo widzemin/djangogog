@@ -4,9 +4,9 @@ from consts.NamesConsts import RACES
 
 class Animal(models.Model):
     name = models.CharField(max_length=100)
-    relation_date = models.DateField()
+    relation_date = models.DateField(auto_now=False)
     gender = models.BooleanField()
     race = models.CharField(max_length=100, choices=RACES)
 
     def __str__(self):
-         return self.name
+        return self.name
