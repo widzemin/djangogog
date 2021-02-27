@@ -125,11 +125,14 @@ def test_order_api_valid_keys(admin_client):
         name='temp_animal_name',
         relation_date=datetime.datetime.now(),
         gender=True,
-        race=MOPS
+        race=MOPS,
+        weight=3
     )
     temp_doctor = Doctor.objects.create(
         name='temp_doctor_name',
-        grade=DOCTOR
+        grade=DOCTOR,
+        min_animal_weight=1,
+        max_animal_weight=10
     )
     data = {
         'reason': 'temp_reason',
@@ -145,3 +148,64 @@ def test_order_api_valid_keys(admin_client):
     assert response.status_code == 201, response.data
     assert response.data['doctor'] == temp_doctor.id
     assert response.data['animal'] == temp_animal.id
+
+
+@pytest.mark.django_db
+def test_order_api_invalid_weight(admin_client):
+    temp_animal = Animal.objects.create(
+        name='temp_animal_name',
+        relation_date=datetime.datetime.now(),
+        gender=True,
+        race=MOPS,
+        weight=5
+    )
+    temp_doctor = Doctor.objects.create(
+        name='temp_doctor_name',
+        grade=DOCTOR,
+        min_animal_weight=3,
+        max_animal_weight=4
+    )
+    data = {
+        'reason': 'temp_reason',
+        'date': datetime.datetime.now(),
+        'doctor': temp_doctor.id,
+        'animal': temp_animal.id
+    }
+    response = admin_client.post(
+        '/api/order/setview/',
+        data=data,
+        content_type='application/json'
+    )
+    assert response.status_code == 400, response.data
+
+
+@pytest.mark.django_db
+def test_order_api_valid_weight(admin_client):
+    temp_animal = Animal.objects.create(
+        name='temp_animal_name',
+        relation_date=datetime.datetime.now(),
+        gender=True,
+        race=MOPS,
+        weight=5
+    )
+    temp_doctor = Doctor.objects.create(
+        name='temp_doctor_name',
+        grade=DOCTOR,
+        min_animal_weight=1,
+        max_animal_weight=10
+    )
+    data = {
+        'reason': 'temp_reason',
+        'date': datetime.datetime.now(),
+        'doctor': temp_doctor.id,
+        'animal': temp_animal.id
+    }
+    response = admin_client.post(
+        '/api/order/setview/',
+        data=data,
+        content_type='application/json'
+    )
+    assert response.status_code == 201, response.data
+    assert response.data['doctor'] == temp_doctor.id
+    assert response.data['animal'] == temp_animal.id
+

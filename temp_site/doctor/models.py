@@ -1,5 +1,6 @@
 from django.db import models
 from consts.NamesConsts import GRADES
+from rest_framework import serializers
 
 
 class Doctor(models.Model):
