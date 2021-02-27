@@ -11,7 +11,8 @@ def test_animal_api_client(client):
         'name': 'temp_animal_name',
         'relation_date': datetime.datetime.now(),
         'gender': True,
-        'race': MOPS
+        'race': MOPS,
+        'weight': 0
     }
     response = client.post(
         '/api/animal/setview/',
@@ -27,7 +28,8 @@ def test_animal_api_valid_keys(admin_client):
         'name': 'temp_animal_name',
         'relation_date': datetime.date.today(),
         'gender': True,
-        'race': MOPS
+        'race': MOPS,
+        'weight': 0
     }
     response = admin_client.post(
         '/api/animal/setview/',
@@ -39,4 +41,4 @@ def test_animal_api_valid_keys(admin_client):
     assert response.data['gender'] is True
     assert response.data['race'] == MOPS
     assert response.data['relation_date'] == str(datetime.date.today())
-
+    assert response.data['weight'] == 0

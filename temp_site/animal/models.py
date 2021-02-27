@@ -7,6 +7,7 @@ class Animal(models.Model):
     relation_date = models.DateField(auto_now=False)
     gender = models.BooleanField()
     race = models.CharField(max_length=100, choices=RACES)
+    weight = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name

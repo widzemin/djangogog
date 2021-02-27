@@ -1,7 +1,7 @@
 {% if animal %}
 	<p>
-                Animal name - {{ animal.name }} <br>
-                Animal relation date - {{ animal.relation_date }} <br>
+        Animal name - {{ animal.name }} <br>
+        Animal relation date - {{ animal.relation_date }} <br>
 		Animal gender - 
 		{% if animal.gender %}
 			dog
@@ -9,6 +9,7 @@
 			bitch
 		{% endif %} <br>
 		Animal race - {{ animal.race }} <br>
+		Animal weight - {{ animal.weight }} <br>
         </p>
 {% else  %}
         <p> 

@@ -9,7 +9,9 @@ from consts.NamesConsts import DOCTOR, SDOCTOR, MDOCTOR
 def test_doctor_api_client(client):
     data = {
         'name': 'temp_doctor_name',
-        'grade': DOCTOR
+        'grade': DOCTOR,
+        'min_animal_weight': 0,
+        'max_animal_weight': 0
     }
     response = client.post(
         '/api/doctor/setview/',
@@ -23,7 +25,9 @@ def test_doctor_api_client(client):
 def test_doctor_api_valid_keys(admin_client):
     data = {
         'name': 'temp_doctor_name',
-        'grade': DOCTOR
+        'grade': DOCTOR,
+        'min_animal_weight': 0,
+        'max_animal_weight': 0
     }
     response = admin_client.post(
         '/api/doctor/setview/',
@@ -33,3 +37,5 @@ def test_doctor_api_valid_keys(admin_client):
     assert response.status_code == 201, response.data
     assert response.data['name'] == 'temp_doctor_name'
     assert response.data['grade'] == DOCTOR
+    assert response.data['min_animal_weight'] == 0
+    assert response.data['max_animal_weight'] == 0
