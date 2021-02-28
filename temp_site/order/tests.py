@@ -3,8 +3,11 @@ from animal.models import Animal
 from doctor.models import Doctor
 from order.models import Order
 import datetime
-from consts.NamesConsts import MOPS, PEKINES, SHPIC
-from consts.NamesConsts import DOCTOR, SDOCTOR, MDOCTOR
+from consts.NamesConsts import (
+    MOPS, PEKINES, SHPIC, RACES,
+    DOCTOR, SDOCTOR, MDOCTOR, GRADES,
+    DOG, BITCH, BOTH, GENDERS
+)
 
 
 @pytest.mark.django_db
@@ -209,3 +212,176 @@ def test_order_api_valid_weight(admin_client):
     assert response.data['doctor'] == temp_doctor.id
     assert response.data['animal'] == temp_animal.id
 
+
+@pytest.mark.django_db
+def test_order_api_invalid_doctor_race(admin_client):
+    temp_animal = Animal.objects.create(
+        name='temp_animal_name',
+        race=SHPIC
+    )
+    temp_doctor = Doctor.objects.create(
+        name='temp_doctor_name',
+        available_animal_race=[MOPS, PEKINES]
+    )
+    data = {
+        'reason': 'temp_reason',
+        'date': datetime.datetime.now(),
+        'doctor': temp_doctor.id,
+        'animal': temp_animal.id
+    }
+    response = admin_client.post(
+        '/api/order/setview/',
+        data=data,
+        content_type='application/json'
+    )
+    assert response.status_code == 400, response.data
+
+
+@pytest.mark.django_db
+def test_order_api_valid_doctor_race(admin_client):
+    temp_animal = Animal.objects.create(
+        name='temp_animal_name',
+        race=MOPS
+    )
+    temp_doctor = Doctor.objects.create(
+        name='temp_doctor_name',
+        available_animal_race=[MOPS, SHPIC, PEKINES]
+    )
+    data = {
+        'reason': 'temp_reason',
+        'date': datetime.datetime.now(),
+        'doctor': temp_doctor.id,
+        'animal': temp_animal.id
+    }
+    response = admin_client.post(
+        '/api/order/setview/',
+        data=data,
+        content_type='application/json'
+    )
+    assert response.status_code == 201, response.data
+    assert response.data['animal'] == temp_animal.id
+    assert response.data['doctor'] == temp_doctor.id
+
+
+@pytest.mark.django_db
+def test_order_api_invalid_doctor_gender(admin_client):
+    temp_animal_1 = Animal.objects.create(
+        name='temp_animal_name',
+        gender=True
+    )
+    temp_doctor_1 = Doctor.objects.create(
+        name='temp_doctor_name',
+        available_animal_gender=BITCH
+    )
+    temp_animal_2 = Animal.objects.create(
+        name='temp_animal_name',
+        gender=False
+    )
+    temp_doctor_2 = Doctor.objects.create(
+        name='temp_doctor_name',
+        available_animal_gender=DOG
+    )
+    data_1 = {
+        'reason': 'temp_reason',
+        'date': datetime.datetime.now(),
+        'doctor': temp_doctor_1.id,
+        'animal': temp_animal_1.id
+    }
+    data_2 = {
+        'reason': 'temp_reason',
+        'date': datetime.datetime.now(),
+        'doctor': temp_doctor_2.id,
+        'animal': temp_animal_2.id
+    }
+    response_1 = admin_client.post(
+        '/api/order/setview/',
+        data=data_1,
+        content_type='application/json'
+    )
+    response_2 = admin_client.post(
+        '/api/order/setview/',
+        data=data_2,
+        content_type='application/json'
+    )
+    assert response_1.status_code == 400, response_1.data
+    assert response_2.status_code == 400, response_2.data
+
+
+@pytest.mark.django_db
+def test_order_api_valid_doctor_race(admin_client):
+    temp_animal_1 = Animal.objects.create(
+        name='temp_animal_name',
+        gender=True
+    )
+    temp_animal_2 = Animal.objects.create(
+        name='temp_animal_name',
+        gender=False
+    )
+    temp_doctor_1 = Doctor.objects.create(
+        name='temp_doctor_name',
+        available_animal_gender=DOG
+    )
+    temp_doctor_2 = Doctor.objects.create(
+        name='temp_doctor_name',
+        available_animal_gender=BITCH
+    )
+    temp_doctor_3 = Doctor.objects.create(
+        name='temp_doctor_name',
+        available_animal_gender=BOTH
+    )
+    data_1 = {
+        'reason': 'temp_reason',
+        'date': datetime.datetime.now(),
+        'doctor': temp_doctor_1.id,
+        'animal': temp_animal_1.id
+    }
+    data_2 = {
+        'reason': 'temp_reason',
+        'date': datetime.datetime.now(),
+        'doctor': temp_doctor_2.id,
+        'animal': temp_animal_2.id
+    }
+    data_3 = {
+        'reason': 'temp_reason',
+        'date': datetime.datetime.now(),
+        'doctor': temp_doctor_3.id,
+        'animal': temp_animal_1.id
+    }
+    data_4 = {
+        'reason': 'temp_reason',
+        'date': datetime.datetime.now(),
+        'doctor': temp_doctor_3.id,
+        'animal': temp_animal_2.id
+    }
+    response_1 = admin_client.post(
+        '/api/order/setview/',
+        data=data_1,
+        content_type='application/json'
+    )
+    response_2 = admin_client.post(
+        '/api/order/setview/',
+        data=data_2,
+        content_type='application/json'
+    )
+    response_3 = admin_client.post(
+        '/api/order/setview/',
+        data=data_3,
+        content_type='application/json'
+    )
+    response_4 = admin_client.post(
+        '/api/order/setview/',
+        data=data_4,
+        content_type='application/json'
+    )
+    assert response_1.status_code == 201, response_1.data
+    assert response_2.status_code == 201, response_2.data
+    assert response_3.status_code == 201, response_2.data
+    assert response_4.status_code == 201, response_2.data
+    assert response_1.data['animal'] == temp_animal_1.id
+    assert response_1.data['doctor'] == temp_doctor_1.id
+    assert response_2.data['animal'] == temp_animal_2.id
+    assert response_2.data['doctor'] == temp_doctor_2.id
+    assert response_3.data['animal'] == temp_animal_1.id
+    assert response_3.data['doctor'] == temp_doctor_3.id
+    assert response_4.data['animal'] == temp_animal_2.id
+    assert response_4.data['doctor'] == temp_doctor_3.id

@@ -14,7 +14,7 @@ class OrderSerializer(serializers.ModelSerializer):
         validate_all(self.initial_data)
         return data
 
-    #def validate_doctor(self, doctor):
+    # def validate_doctor(self, doctor):
     #    animal = Animal.objects.get(pk=self.initial_data['animal'])
     #    if animal.weight < doctor.min_animal_weight or animal.weight > doctor.max_animal_weight:
     #        raise serializers.ValidationError('Weight is out of range')

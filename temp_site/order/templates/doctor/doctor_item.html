@@ -3,7 +3,12 @@
 		Doctor name - {{ doctor.name }} <br>
 		Doctor grade - {{ doctor.grade }} <br>
 		Doctor minimum animal weight - {{ doctor.min_animal_weight }} <br>
-		Doctor maximum animal weight - {{ doctor.max_animal_weight }}
+		Doctor maximum animal weight - {{ doctor.max_animal_weight }} <br>
+		Doctor available animal races : 
+		{% for race in doctor.available_animal_race %}
+			{{ race }}  
+		{% endfor %} <br>
+		Doctor available animal gender - {{ doctor.available_animal_gender }} <br>
 	</p>
 {% else  %}
 	<p> 
